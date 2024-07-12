@@ -11,8 +11,11 @@ public class GamepadTelemetry extends OpMode {
 
     @Override
     public void loop() {
-        double speedForward = -gamepad1.left_stick_y / 2.0;
-        telemetry.addData("Left stick", gamepad1.left_stick_y);
-        telemetry.addData(" Speed Forward", speedForward);
+        double speedForward = -gamepad1.right_stick_y /2.0;
+         if (gamepad1.a == true){
+             speedForward = gamepad1.right_stick_y;
+        }
+    telemetry.addData("Speed", speedForward);
+            telemetry.addData("Ystick", gamepad1.right_stick_y);
     }
 }
