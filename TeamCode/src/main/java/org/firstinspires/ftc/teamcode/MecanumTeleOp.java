@@ -4,60 +4,98 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class MecanumTeleOp extends LinearOpMode {
-    @Override
-  public Servo Reaper;
-    public void runOpMode() throws InterruptedException {
-        // Declare our motors
-        // Make sure your ID's match your configuration
-        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
-        DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
-        DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
-        DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
-        DcMotor intake = hardwareMap.dcMotor.get("intake");
-        Reaper = hardwareMap.get(Servo.class, "reaper");
 
-        // Reverse the right side motors. This may be wrong for your setup.
-        // If your robot moves backwards when commanded to go forwards,
-        // reverse the left side instead.
-        // See the note about this earlier on this page.
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+    //Defining the servos used
+    public Servo Reaper;
+    public Servo Hood;
+
+    //This is used for rising or falling edge detectors,so you can detect if a button has been held down or not.
+    Gamepad currentGamepad1 = new Gamepad();
+    Gamepad currentGamepad2 = new Gamepad();
+    Gamepad previousGamepad1 = new Gamepad();
+    Gamepad previousGamepad2 = new Gamepad();
+
+
+    //Defining variables
+    int reaperPos = 1;
+
+    public void runOpMode() {
+
+        //Telling the robot where to find the servos
+        Reaper = hardwareMap.get(Servo.class, "reaper");
+        Hood = hardwareMap.get(Servo.class,"hood");
 
         waitForStart();
 
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            int z = 0;
-            if (gamepad1.right_bumper){
-                z++;
-            }
-            if (gamepad1.left_bumper){
-                z--;
-            }
-            double intakeSpeed = z * .5;
-            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+
+            //Declaring the motors
+            DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
+            DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
+            DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
+            DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+            DcMotor intake = hardwareMap.dcMotor.get("intake");
+
+            //Reversing the motors for mecanum drive
+            frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            //These are for mecanum drive
+            double y = -gamepad1.left_stick_y;
+            double x = gamepad1.left_stick_x * 1.1;
             double rx = gamepad1.right_stick_x;
 
-            // Denominator is the largest motor power (absolute value) or 1
-            // This ensures all the powers maintain the same ratio,
-            // but only if at least one is out of the range [-1, 1]
+            //This is basically limiting the speed of the drivetrain motors to be a maximum of 1
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
             double frontLeftPower = (y + x + rx) / denominator;
             double backLeftPower = (y - x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
+            //More code for edge detectors
+            previousGamepad1.copy(currentGamepad1);
+            previousGamepad2.copy(currentGamepad2);
+            currentGamepad1.copy(gamepad1);
+            currentGamepad2.copy(gamepad2);
+
+            //This is setting the motor power to variables we previously defined
             frontLeftMotor.setPower(frontLeftPower);
             backLeftMotor.setPower(backLeftPower);
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
-            intake.setPower(intakeSpeed);
+
+            //This is setting the intake power when a bumper is pressed.
+            if (gamepad1.right_bumper) intake.setPower(.8);
+            else if (gamepad1.left_bumper) intake.setPower(-0.8);
+            else intake.setPower(0);
+
+            //This means that, whenever the intake is active, the hood will be down.
+            if (gamepad1.right_bumper) {
+                Hood.setPosition(.5);
+            }
+            else Hood.setPosition(.4);
+
+            //This is a rising edge detector. It cycles between 3 states when a is pressed, adding one to reaperPos after each press. When reaperPos is above 3, it gets set back to 1.
+            if (currentGamepad1.a && !previousGamepad1.a) {
+                reaperPos++;
+            }
+                if (reaperPos > 3) {
+                    reaperPos = 1;
+                }
+                if (reaperPos == 1) {
+                    Reaper.setPosition(0.7);
+                } else if (reaperPos == 2) {
+                    Reaper.setPosition(0.3);
+                } else {
+                    Reaper.setPosition(0.15);
+                }
+            }
         }
     }
-}
