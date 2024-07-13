@@ -80,7 +80,7 @@ public class MecanumTeleOp extends LinearOpMode {
             if (gamepad1.right_bumper) {
                 Hood.setPosition(.5);
             }
-            else Hood.setPosition(.4);
+            else Hood.setPosition(.4325);
 
             //This is a rising edge detector. It cycles between 3 states when a is pressed, adding one to reaperPos after each press. When reaperPos is above 3, it gets set back to 1.
             if (currentGamepad1.a && !previousGamepad1.a) {
