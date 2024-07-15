@@ -23,7 +23,10 @@ public class MecanumTeleOp extends LinearOpMode {
 
     //Defining variables
     //reaperPos is the position that the reaper will be in.
-    int reaperPos = 1;
+    int reaperPos;
+    double stow = 0.7;
+    double stack = 0.3;
+    double ground = .15;
 
     public void runOpMode() {
 
@@ -92,15 +95,15 @@ public class MecanumTeleOp extends LinearOpMode {
             if (currentGamepad1.a && !previousGamepad1.a) {
                 reaperPos++;
             }
-                if (reaperPos > 3) {
-                    reaperPos = 1;
+                if (reaperPos > 2) {
+                    reaperPos = 0;
                 }
-                if (reaperPos == 1) {
-                    Reaper.setPosition(0.7);
-                } else if (reaperPos == 2) {
-                    Reaper.setPosition(0.3);
+                if (reaperPos == 0) {
+                    Reaper.setPosition(stow);
+                } else if (reaperPos == 1) {
+                    Reaper.setPosition(stack);
                 } else {
-                    Reaper.setPosition(0.15);
+                    Reaper.setPosition(ground);
                 }
             }
         }
