@@ -10,27 +10,36 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 public class MecanumTeleOp extends LinearOpMode {
 
-    //Defining the servos used
+    // Defining the servos used
     public Servo Reaper;
     public Servo Hood;
 
-    //This is used for rising or falling edge detectors,so you can detect if a button has been held down or not.
+    // This is used for rising or falling edge detectors,so you can detect if a button has been held down or not.
     Gamepad currentGamepad1 = new Gamepad();
     Gamepad currentGamepad2 = new Gamepad();
     Gamepad previousGamepad1 = new Gamepad();
     Gamepad previousGamepad2 = new Gamepad();
 
+    // Declaring the motors
+    DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
+    DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
+    DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
+    DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+    DcMotor intake = hardwareMap.dcMotor.get("intake");
 
-    //Defining variables
-    //reaperPos is the position that the reaper will be in.
+    // Defining variables
+    // reaperPos is the position that the reaper will be in.
     int reaperPos;
     double stow = 0.7;
     double stack = 0.3;
     double ground = .15;
 
+    double hoodOpen = 0.5;
+    double hoodClosed = 0.4325;
+
     public void runOpMode() {
 
-        //Telling the robot where to find the servos
+        // Telling the robot where to find the servos
         Reaper = hardwareMap.get(Servo.class, "reaper");
         Hood = hardwareMap.get(Servo.class,"hood");
 
@@ -40,12 +49,27 @@ public class MecanumTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            //Declaring the motors
-            DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
-            DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
-            DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
-            DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
-            DcMotor intake = hardwareMap.dcMotor.get("intake");
+            // More code for edge detectors
+            previousGamepad1.copy(currentGamepad1);
+            previousGamepad2.copy(currentGamepad2);
+            currentGamepad1.copy(gamepad1);
+            currentGamepad2.copy(gamepad2);
+
+            runMecanumDrive();
+
+            runIntakeHood();
+
+            // This is a rising edge detector. It makes sure that 1 is added to reaperPos once, instead
+            // of every loop a is pressed.
+            if (currentGamepad1.a && !previousGamepad1.a) {
+                reaperPos++;
+            }
+            runReaper();
+            }
+        }
+
+            // This is a method containing all of the code needed for mecanum drive
+            public void runMecanumDrive () {
 
             //Reversing the motors for mecanum drive
             frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -63,48 +87,50 @@ public class MecanumTeleOp extends LinearOpMode {
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
-            //More code for edge detectors
-            previousGamepad1.copy(currentGamepad1);
-            previousGamepad2.copy(currentGamepad2);
-            currentGamepad1.copy(gamepad1);
-            currentGamepad2.copy(gamepad2);
-
             //This is setting the motor power to variables we previously defined
             frontLeftMotor.setPower(frontLeftPower);
             backLeftMotor.setPower(backLeftPower);
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
+            }
 
-            //This is setting the intake power when a bumper is pressed.
+            // This method is for running the intake and the hood at the same time.
+            public void runIntakeHood(){
+            // The power we want the intake to be run at
+            double intakePower = 0.8;
+
+            // This is setting the intake power when a bumper is pressed.
             if (gamepad1.right_bumper) {
-                intake.setPower(.8);
+                intake.setPower(intakePower);
             }
             else if (gamepad1.left_bumper) {
-                intake.setPower(-0.8);
+                intake.setPower(-intakePower);
             }
             else intake.setPower(0);
 
-            //This means that, whenever the intake is active, the hood will be down.
+            // This means that, whenever the intake is active, the hood will be down.
             if (gamepad1.right_bumper) {
-                Hood.setPosition(.5);
+                Hood.setPosition(hoodOpen);
             }
-            else Hood.setPosition(.4325);
+            else Hood.setPosition(hoodClosed);
+            }
 
-            //This is a rising edge detector. It cycles between 3 states when a is pressed, adding one to reaperPos after each press. When reaperPos is above 3, it gets set back to 1.
-            //This code is changing what position the reaper is at based on what value reaperPos has.
-            if (currentGamepad1.a && !previousGamepad1.a) {
-                reaperPos++;
+            // This is a method for the reaper changing position.
+            // This code is changing what position the reaper is at based on what value reaperPos has,
+            // and resets if reaperPos gets above 2.
+            public void runReaper(){
+            if (reaperPos > 2) {
+            reaperPos = 0;
             }
-                if (reaperPos > 2) {
-                    reaperPos = 0;
-                }
-                if (reaperPos == 0) {
-                    Reaper.setPosition(stow);
-                } else if (reaperPos == 1) {
-                    Reaper.setPosition(stack);
-                } else {
-                    Reaper.setPosition(ground);
-                }
+            if (reaperPos == 0) {
+                Reaper.setPosition(stow);
             }
+            else if (reaperPos == 1) {
+                Reaper.setPosition(stack);
+            }
+            else {
+                Reaper.setPosition(ground);
         }
+    }
+
     }
