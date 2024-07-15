@@ -37,6 +37,10 @@ public class MecanumTeleOp extends LinearOpMode {
     double hoodOpen = 0.5;
     double hoodClosed = 0.4325;
 
+
+
+
+    // This is where the OpMode itself begins
     public void runOpMode() {
 
         // Telling the robot where to find the servos
@@ -47,6 +51,10 @@ public class MecanumTeleOp extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+
+
+
+        // This is the primary loop for teleOp
         while (opModeIsActive()) {
 
             // More code for edge detectors
@@ -67,6 +75,12 @@ public class MecanumTeleOp extends LinearOpMode {
             runReaper();
             }
         }
+
+
+
+// Everything below this point is a separate method which contains the code for the main loop
+
+
 
             // This is a method containing all of the code needed for mecanum drive
             public void runMecanumDrive () {
@@ -94,6 +108,9 @@ public class MecanumTeleOp extends LinearOpMode {
             backRightMotor.setPower(backRightPower);
             }
 
+
+
+
             // This method is for running the intake and the hood at the same time.
             public void runIntakeHood(){
             // The power we want the intake to be run at
@@ -114,6 +131,9 @@ public class MecanumTeleOp extends LinearOpMode {
             }
             else Hood.setPosition(hoodClosed);
             }
+
+
+
 
             // This is a method for the reaper changing position.
             // This code is changing what position the reaper is at based on what value reaperPos has,
