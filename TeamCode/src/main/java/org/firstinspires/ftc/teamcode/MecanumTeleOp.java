@@ -21,10 +21,10 @@ public class MecanumTeleOp extends LinearOpMode {
     Gamepad previousGamepad2 = new Gamepad();
 
     // Declaring the motors
-    DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
-    DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
-    DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
-    DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+    DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
+    DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
+    DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
+    DcMotor backRightMotor = hardwareMap.dcMotor.get("rightBack");
     DcMotor intake = hardwareMap.dcMotor.get("intake");
 
     // Defining variables
