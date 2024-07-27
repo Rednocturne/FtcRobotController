@@ -20,25 +20,15 @@ public class MecanumTeleOp extends LinearOpMode {
     Gamepad previousGamepad1 = new Gamepad();
     Gamepad previousGamepad2 = new Gamepad();
 
-    // Declaring the motors
-    DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
-    DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
-    DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
-    DcMotor backRightMotor = hardwareMap.dcMotor.get("rightBack");
-    DcMotor intake = hardwareMap.dcMotor.get("intake");
-
     // Defining variables
     // reaperPos is the position that the reaper will be in.
     int reaperPos;
     double stow = 0.7;
-    double stack = 0.3;
-    double ground = .15;
+    double stack = 0.18;
+    double ground = .13;
 
-    double hoodOpen = 0.5;
-    double hoodClosed = 0.4325;
-
-
-
+    double hoodOpen = 0.57;
+    double hoodClosed = 0.4425;
 
     // This is where the OpMode itself begins
     public void runOpMode() {
@@ -50,9 +40,6 @@ public class MecanumTeleOp extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
-
-
-
 
         // This is the primary loop for teleOp
         while (opModeIsActive()) {
@@ -76,14 +63,18 @@ public class MecanumTeleOp extends LinearOpMode {
             }
         }
 
-
-
 // Everything below this point is a separate method which contains the code for the main loop
 
 
 
             // This is a method containing all of the code needed for mecanum drive
             public void runMecanumDrive () {
+
+                // Declaring the motors
+                DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
+                DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
+                DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
+                DcMotor backRightMotor = hardwareMap.dcMotor.get("rightBack");
 
             //Reversing the motors for mecanum drive
             frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -108,11 +99,12 @@ public class MecanumTeleOp extends LinearOpMode {
             backRightMotor.setPower(backRightPower);
             }
 
-
-
-
             // This method is for running the intake and the hood at the same time.
             public void runIntakeHood(){
+
+            // Declaring intake motor
+            DcMotor intake = hardwareMap.dcMotor.get("intake");
+
             // The power we want the intake to be run at
             double intakePower = 0.8;
 
