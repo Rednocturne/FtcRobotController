@@ -23,12 +23,14 @@ public class MecanumTeleOp extends LinearOpMode {
     // Defining variables
     // reaperPos is the position that the reaper will be in.
     int reaperPos;
-    double stow = 0.7;
-    double stack = 0.18;
-    double ground = .13;
+    final double stow = 0.7;
+    final double stack = 0.18;
+    final double ground = .13;
 
-    double hoodOpen = 0.57;
-    double hoodClosed = 0.4425;
+    final double hoodOpen = 0.57;
+    final double hoodClosed = 0.4425;
+
+    final double diffyPower = 0.5;
 
     // This is where the OpMode itself begins
     public void runOpMode() {
@@ -54,6 +56,8 @@ public class MecanumTeleOp extends LinearOpMode {
 
             runIntakeHood();
 
+            runDiffy();
+
             // This is a rising edge detector. It makes sure that 1 is added to reaperPos once, instead
             // of every loop a is pressed.
             if (currentGamepad1.a && !previousGamepad1.a) {
@@ -64,8 +68,6 @@ public class MecanumTeleOp extends LinearOpMode {
         }
 
 // Everything below this point is a separate method which contains the code for the main loop
-
-
 
             // This is a method containing all of the code needed for mecanum drive
             public void runMecanumDrive () {
@@ -124,13 +126,11 @@ public class MecanumTeleOp extends LinearOpMode {
             else Hood.setPosition(hoodClosed);
             }
 
-
-
-
             // This is a method for the reaper changing position.
             // This code is changing what position the reaper is at based on what value reaperPos has,
             // and resets if reaperPos gets above 2.
             public void runReaper(){
+
             if (reaperPos > 2) {
             reaperPos = 0;
             }
@@ -142,7 +142,14 @@ public class MecanumTeleOp extends LinearOpMode {
             }
             else {
                 Reaper.setPosition(ground);
+            }
         }
-    }
+            public void runDiffy(){
 
+                DcMotor diffy1 = hardwareMap.dcMotor.get("S1");
+                DcMotor diffy2 = hardwareMap.dcMotor.get("S2");
+
+               diffy1.setPower((gamepad2.left_stick_y) * (diffyPower));
+               diffy2.setPower((gamepad2.right_stick_y) * (-diffyPower));
+            }
     }
