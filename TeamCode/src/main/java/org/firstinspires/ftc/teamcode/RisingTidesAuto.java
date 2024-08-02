@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import androidx.annotation.NonNull;
 
 // RR-specific imports
@@ -11,12 +8,11 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.acmerobotics.roadrunner.ParallelAction;
 
 // Non-RR imports
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -24,23 +20,22 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous(name = "RisingTidesAuto", group = "Autonomous")
 public class RisingTidesAuto extends LinearOpMode {
 
     // intake class
-    public static class intake {
+    public  class Intake {
         private DcMotorEx intake;
 
-        public intake(HardwareMap hardwareMap) {
+        public Intake(HardwareMap hardwareMap) {
             intake = hardwareMap.get(DcMotorEx.class, "intake");
             intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             intake.setDirection(DcMotorSimple.Direction.FORWARD);
         }
 
-        public class intakeOn implements Action {
+        public class IntakeOn implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 intake.setPower(0.8);
@@ -49,10 +44,10 @@ public class RisingTidesAuto extends LinearOpMode {
         }
 
         public Action intakeOn() {
-            return new intakeOn();
+            return new IntakeOn();
         }
 
-        public class intakeOff implements Action {
+        public class IntakeOff implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 intake.setPower(0);
@@ -61,25 +56,23 @@ public class RisingTidesAuto extends LinearOpMode {
         }
 
         public Action intakeOff() {
-            return new intakeOff();
+            return new IntakeOff();
         }
-
-
     }
 
     // reaper class
-    public static class reaper {
-        private static Servo reaper;
+    public class Reaper {
+        private  Servo reaper;
 
-        static final double stow = 0.7;
-        static final double stack = 0.18;
-        static final double ground = 0.11;
+         final double stow = 0.7;
+         final double stack = 0.18;
+         final double ground = 0.11;
 
-        public reaper(HardwareMap hardwareMap) {
-            Servo reaper = hardwareMap.get(Servo.class, "reaper");
+        public Reaper(HardwareMap hardwareMap) {
+            reaper = hardwareMap.get(Servo.class, "reaper");
         }
 
-        public static class reaperStow implements Action {
+        public class ReaperStow implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 reaper.setPosition(stow);
@@ -87,11 +80,11 @@ public class RisingTidesAuto extends LinearOpMode {
             }
         }
 
-        public static Action reaperStow() {
-            return new reaperStow();
+        public  Action reaperStow() {
+            return new ReaperStow();
         }
 
-        public static class reaperStack implements Action {
+        public  class ReaperStack implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 reaper.setPosition(stack);
@@ -99,11 +92,11 @@ public class RisingTidesAuto extends LinearOpMode {
             }
         }
 
-        public static Action reaperStack() {
-            return new reaperStack();
+        public Action reaperStack() {
+            return new ReaperStack();
         }
 
-        public static class reaperGround implements Action {
+        public class ReaperGround implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 reaper.setPosition(ground);
@@ -111,22 +104,23 @@ public class RisingTidesAuto extends LinearOpMode {
             }
         }
 
-        public static Action reaperGround() {
-            return new reaperGround();
+        public Action reaperGround() {
+            return new ReaperGround();
         }
     }
 
-    public static class hood {
+    // hood class
+    public class Hood {
         private Servo hood;
 
         final double hoodOpen = 0.57;
         final double hoodClose = 0.4425;
 
-        public hood(HardwareMap hardwareMap) {
+        public Hood(HardwareMap hardwareMap) {
             hood = hardwareMap.get(Servo.class, "hood");
         }
 
-        public class hoodOpen implements Action {
+        public class HoodOpen implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 hood.setPosition(hoodOpen);
@@ -135,10 +129,10 @@ public class RisingTidesAuto extends LinearOpMode {
         }
 
         public Action hoodOpen() {
-            return new hoodOpen();
+            return new HoodOpen();
         }
 
-        public class hoodClose implements Action {
+        public class HoodClose implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 hood.setPosition(hoodClose);
@@ -147,7 +141,7 @@ public class RisingTidesAuto extends LinearOpMode {
         }
 
         public Action hoodClose() {
-            return new hoodClose();
+            return new HoodClose();
         }
 
     }
@@ -156,10 +150,12 @@ public class RisingTidesAuto extends LinearOpMode {
     public void runOpMode() {
         // instantiate your MecanumDrive at a particular pose.
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(11.8, 61.7, Math.toRadians(90)));
-        // make a Claw instance
-        intake intake = new intake(hardwareMap);
-        // make a Lift instance
-        hood hood = new hood(hardwareMap);
+        // make a Intake instance
+        Intake intake = new Intake(hardwareMap);
+        // make a Hood instance
+        Hood hood = new Hood(hardwareMap);
+        // make a Reaper Instance
+        Reaper reaper = new Reaper(hardwareMap);
 
         // vision here that outputs position
         int visionOutputPosition = 1;
@@ -168,10 +164,11 @@ public class RisingTidesAuto extends LinearOpMode {
         Action trajectoryAction2;
         Action trajectoryAction3;
         Action trajectoryActionCloseOut;
+        Action sleepAction;
 
         trajectoryAction1 = drive.actionBuilder(drive.pose)
                 .setTangent(0)
-                .splineTo(new Vector2d(50, 0), Math.PI / 2)
+                .splineTo(new Vector2d(50, 61.7), Math.PI / 2)
                 .waitSeconds(2)
                 .lineToX(30)
                 .build();
@@ -181,11 +178,16 @@ public class RisingTidesAuto extends LinearOpMode {
                 .build();
         trajectoryActionCloseOut = drive.actionBuilder(drive.pose)
                 .build();
+        sleepAction = drive.actionBuilder(drive.pose)
+                .waitSeconds(1)
+                .build();
 
         while (!isStopRequested() && !opModeIsActive()) {
             int position = visionOutputPosition;
             telemetry.addData("Position during Init", position);
             telemetry.update();
+            reaper.reaperStow();
+            hood.hoodClose();
         }
         int startPosition = visionOutputPosition;
         telemetry.addData("Starting Position", startPosition);
