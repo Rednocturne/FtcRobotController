@@ -164,7 +164,6 @@ public class RisingTidesAuto extends LinearOpMode {
         Action trajectoryAction2;
         Action trajectoryAction3;
         Action trajectoryActionCloseOut;
-        Action sleepAction;
 
         trajectoryAction1 = drive.actionBuilder(drive.pose)
                 .setTangent(0)
@@ -177,9 +176,6 @@ public class RisingTidesAuto extends LinearOpMode {
         trajectoryAction3 = drive.actionBuilder(drive.pose)
                 .build();
         trajectoryActionCloseOut = drive.actionBuilder(drive.pose)
-                .build();
-        sleepAction = drive.actionBuilder(drive.pose)
-                .waitSeconds(1)
                 .build();
 
         while (!isStopRequested() && !opModeIsActive()) {
