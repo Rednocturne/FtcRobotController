@@ -25,12 +25,12 @@ public class MecanumTeleOp extends LinearOpMode {
     int reaperPos;
     final double stow = 0.7;
     final double stack = 0.18;
-    final double ground = .13;
+    final double ground = 0.11;
 
     final double hoodOpen = 0.57;
     final double hoodClosed = 0.4425;
 
-    final double diffyPower = 0.5;
+    final double diffyPower = 0.75;
 
     // This is where the OpMode itself begins
     public void runOpMode() {
@@ -137,7 +137,7 @@ public class MecanumTeleOp extends LinearOpMode {
             if (reaperPos == 0) {
                 Reaper.setPosition(stow);
             }
-            else if (reaperPos == 1) {
+            else       if (reaperPos == 1) {
                 Reaper.setPosition(stack);
             }
             else {
