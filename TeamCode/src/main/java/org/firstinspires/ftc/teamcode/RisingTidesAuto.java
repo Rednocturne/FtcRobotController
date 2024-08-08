@@ -86,6 +86,11 @@ public class RisingTidesAuto extends LinearOpMode {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 return false;
             }
         }
