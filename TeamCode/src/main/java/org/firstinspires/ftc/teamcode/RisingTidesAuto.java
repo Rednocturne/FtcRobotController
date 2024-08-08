@@ -39,6 +39,11 @@ public class RisingTidesAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 intake.setPower(0.8);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 return false;
             }
         }
@@ -76,6 +81,11 @@ public class RisingTidesAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 reaper.setPosition(stow);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 return false;
             }
         }
@@ -88,6 +98,11 @@ public class RisingTidesAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 reaper.setPosition(stack);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 return false;
             }
         }
@@ -100,6 +115,11 @@ public class RisingTidesAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 reaper.setPosition(ground);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 return false;
             }
         }
@@ -124,6 +144,11 @@ public class RisingTidesAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 hood.setPosition(hoodOpen);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 return false;
             }
         }
@@ -136,6 +161,11 @@ public class RisingTidesAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 hood.setPosition(hoodClose);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 return false;
             }
         }
@@ -167,9 +197,7 @@ public class RisingTidesAuto extends LinearOpMode {
 
         trajectoryAction1 = drive.actionBuilder(drive.pose)
                 .setTangent(0)
-                .splineTo(new Vector2d(50, 61.7), Math.PI / 2)
-                .waitSeconds(2)
-                .lineToX(30)
+                .lineToX(50)
                 .build();
         trajectoryAction2 = drive.actionBuilder(drive.pose)
                 .build();
