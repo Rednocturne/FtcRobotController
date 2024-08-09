@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -13,6 +14,10 @@ public class MecanumTeleOp extends LinearOpMode {
     // Defining the servos used
     public Servo Reaper;
     public Servo Hood;
+    public Servo Flipper;
+    public Servo Claw;
+    public CRServo Spin1;
+    public CRServo Spin2;
 
     // This is used for rising or falling edge detectors,so you can detect if a button has been held down or not.
     Gamepad currentGamepad1 = new Gamepad();
@@ -38,6 +43,10 @@ public class MecanumTeleOp extends LinearOpMode {
         // Telling the robot where to find the servos
         Reaper = hardwareMap.get(Servo.class, "reaper");
         Hood = hardwareMap.get(Servo.class,"hood");
+        Flipper = hardwareMap.get(Servo.class, "flipper");
+        Claw = hardwareMap.get(Servo.class, "claw");
+        Spin1 = hardwareMap.get(CRServo.class,"spin1");
+        Spin2 = hardwareMap.get(CRServo.class,"spin2");
 
         waitForStart();
 
