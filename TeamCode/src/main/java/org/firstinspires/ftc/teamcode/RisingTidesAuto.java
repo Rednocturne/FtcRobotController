@@ -201,7 +201,8 @@ public class RisingTidesAuto extends LinearOpMode {
         Action trajectoryActionCloseOut;
 
         trajectoryAction1 = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(12, 28), Math.PI / 2)
+//.splineTo(new Vector2d(12, 28), Math.PI / 2)
+
                 .build();
         trajectoryAction2 = drive.actionBuilder(drive.pose)
                 .build();
