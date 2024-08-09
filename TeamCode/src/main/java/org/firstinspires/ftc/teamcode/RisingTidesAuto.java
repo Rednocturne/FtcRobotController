@@ -184,7 +184,7 @@ public class RisingTidesAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
         // instantiate your MecanumDrive at a particular pose.
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(11.8, 61.7, Math.toRadians(90)));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, 52, Math.toRadians(0)));
         // make a Intake instance
         Intake intake = new Intake(hardwareMap);
         // make a Hood instance
@@ -201,8 +201,7 @@ public class RisingTidesAuto extends LinearOpMode {
         Action trajectoryActionCloseOut;
 
         trajectoryAction1 = drive.actionBuilder(drive.pose)
-                .setTangent(0)
-                .lineToX(50)
+                .splineTo(new Vector2d(12, 28), Math.PI / 2)
                 .build();
         trajectoryAction2 = drive.actionBuilder(drive.pose)
                 .build();
