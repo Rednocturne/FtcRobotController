@@ -12,6 +12,7 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
+
 // Non-RR imports
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -184,7 +185,7 @@ public class RisingTidesAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
         // instantiate your MecanumDrive at a particular pose.
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, 52, Math.toRadians(0)));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(36, 52, Math.toRadians(0)));
         // make a Intake instance
         Intake intake = new Intake(hardwareMap);
         // make a Hood instance
@@ -201,12 +202,15 @@ public class RisingTidesAuto extends LinearOpMode {
         Action trajectoryActionCloseOut;
 
         trajectoryAction1 = drive.actionBuilder(drive.pose)
-//.splineTo(new Vector2d(12, 28), Math.PI / 2)
-
+                .splineTo(new Vector2d(16, 28), Math.PI / 2)
+                .turnTo(Math.toRadians(0))
                 .build();
+
         trajectoryAction2 = drive.actionBuilder(drive.pose)
+                .lineToY(16)
                 .build();
         trajectoryAction3 = drive.actionBuilder(drive.pose)
+                .lineToY(48)
                 .build();
         trajectoryActionCloseOut = drive.actionBuilder(drive.pose)
                 .build();
@@ -249,4 +253,5 @@ public class RisingTidesAuto extends LinearOpMode {
                 )
         );
     }
+
 }
