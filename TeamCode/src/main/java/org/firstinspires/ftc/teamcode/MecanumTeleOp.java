@@ -32,8 +32,17 @@ public class MecanumTeleOp extends LinearOpMode {
     final double stack = 0.18;
     final double ground = 0.11;
 
+    // Defining variables
+    // FlipperPos is the position that the reaper will be in.
+    int FlipperPos;
+    final double hide = 0.6;
+    final double intake = 0.4;
+
     final double hoodOpen = 0.57;
     final double hoodClosed = 0.4425;
+
+    final double clawGrab = 0.57;
+    final double clawRelease = 0.4425;
 
     final double diffyPower = 0.75;
 
@@ -74,6 +83,12 @@ public class MecanumTeleOp extends LinearOpMode {
             }
             runReaper();
             }
+
+        if (currentGamepad2.a && !previousGamepad2.a) {
+            FlipperPos++;
+        }
+        runFlipper();
+    }
         }
 
 // Everything below this point is a separate method which contains the code for the main loop
@@ -135,6 +150,13 @@ public class MecanumTeleOp extends LinearOpMode {
             else Hood.setPosition(hoodClosed);
             }
 
+    // This controls the claw, I just copied code so yipee.
+            if (gamepad2.right_bumper) {
+        Claw.setPosition(clawRelease);
+    }
+            else Claw.setPosition(clawGrab)
+}
+
             // This is a method for the reaper changing position.
             // This code is changing what position the reaper is at based on what value reaperPos has,
             // and resets if reaperPos gets above 2.
@@ -153,12 +175,28 @@ public class MecanumTeleOp extends LinearOpMode {
                 Reaper.setPosition(ground);
             }
         }
+        // This is a method for the flipper changing position.
+    // This code is changing what position the flipper is at based on what value FlipperPos has,
+    // and resets if FlipperPos gets above 2.
+    //I also copied thisssssss :3333
+    public void runFlipper(){
+
+       if (FlipperPos > 1) {
+         FlipperPos = 0;
+       }
+       if (FlipperPos == 0) {
+           Flipper.setPosition(hide);
+      }
+      else {
+        Flipper.setPosition(intake);
+       }
+    }
             public void runDiffy(){
 
                 DcMotor diffy1 = hardwareMap.dcMotor.get("S1");
                 DcMotor diffy2 = hardwareMap.dcMotor.get("S2");
 
-               diffy1.setPower((gamepad2.left_stick_y) * (diffyPower));
-               diffy2.setPower((gamepad2.right_stick_y) * (-diffyPower));
+               diffy1.setPower((gamepad2.left_stick_y) * (-diffyPower));
+               diffy2.setPower((gamepad2.right_stick_y) * (diffyPower));
             }
     }
